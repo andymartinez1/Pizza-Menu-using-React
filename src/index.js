@@ -2,6 +2,51 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
+const pizzaData = [
+  {
+    name: "Focaccia",
+    ingredients: "Bread with italian olive oil and rosemary",
+    price: 6,
+    photoName: "pizzas/focaccia.jpg",
+    soldOut: false,
+  },
+  {
+    name: "Pizza Margherita",
+    ingredients: "Tomato and mozarella",
+    price: 10,
+    photoName: "pizzas/margherita.jpg",
+    soldOut: false,
+  },
+  {
+    name: "Pizza Spinaci",
+    ingredients: "Tomato, mozarella, spinach, and ricotta cheese",
+    price: 12,
+    photoName: "pizzas/spinaci.jpg",
+    soldOut: false,
+  },
+  {
+    name: "Pizza Funghi",
+    ingredients: "Tomato, mozarella, mushrooms, and onion",
+    price: 12,
+    photoName: "pizzas/funghi.jpg",
+    soldOut: false,
+  },
+  {
+    name: "Pizza Salamino",
+    ingredients: "Tomato, mozarella, and pepperoni",
+    price: 15,
+    photoName: "pizzas/salamino.jpg",
+    soldOut: true,
+  },
+  {
+    name: "Pizza Prosciutto",
+    ingredients: "Tomato, mozarella, ham, aragula, and burrata cheese",
+    price: 18,
+    photoName: "pizzas/prosciutto.jpg",
+    soldOut: false,
+  },
+];
+
 function App() {
   return (
     <div className="container">
@@ -15,28 +60,62 @@ function App() {
 function Header() {
   return (
     <header className="header">
-      <h1>React Pizza</h1>
+      <h1>React Pizza Co.</h1>
     </header>
   );
 }
 
 function Menu() {
+  const pizzas = pizzaData;
+  const numPizzas = pizzas.length;
+
   return (
     <main className="menu">
       <h2>Menu</h2>
-      <Pizza
-        name="Pizza Margherita"
-        ingredients="Tomato and mozarella"
-        price={10}
-        photoName="pizzas/margherita.jpg"
-      />
-      <Pizza
-        name="Pizza Funghi"
-        ingredients="Tomato, mushrooms"
-        price={13}
-        photoName="pizzas/funghi.jpg"
-      />
+
+      {numPizzas > 0 ? (
+        <React.Fragment>
+          <p>
+            Authentic Italian cuisine. 6 creative dished to choose from. All
+            from our stone oven, all organic, all delicious.
+          </p>
+
+          <ul className="pizzas">
+            {pizzas.map((pizza) => (
+              <Pizza pizzaObj={pizza} key={pizza.name} />
+            ))}
+          </ul>
+        </React.Fragment>
+      ) : (
+        <p>We are still working on our menu. Please come back later. </p>
+      )}
     </main>
+  );
+}
+
+function Pizza({ pizzaObj }) {
+  return (
+    <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObj.photoName} alt={pizzaObj.name} />
+      <div>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        <span>{pizzaObj.soldOut ? "SOLD OUT" : pizzaObj.price}</span>
+      </div>
+    </li>
+  );
+}
+
+function Order({ closeHour, openHour }) {
+  return (
+    <div className="order">
+      <p>We are open!</p>
+      <p>
+        Our hours are {openHour}:00 to {closeHour}:00. Please visit us or order
+        online.
+      </p>
+      <button className="btn">Order</button>
+    </div>
   );
 }
 
@@ -49,23 +128,15 @@ function Footer() {
 
   return (
     <footer className="footer">
-      {new Date().toLocaleTimeString()}, We are currently open!
+      {isOpen ? (
+        <Order closeHour={closeHour} openHour={openHour} />
+      ) : (
+        <p>
+          We're currently closed. We're happy to have you between {openHour}:00
+          and {closeHour}:00
+        </p>
+      )}
     </footer>
-  );
-}
-
-function Pizza(props) {
-  return (
-    <div className="pizza">
-      <img src={props.photoName} alt={props.name} />
-      <div>
-        <h3>{props.name}</h3>
-        <p>{props.ingredients}</p>
-        <span>
-          <p>{props.price}</p>
-        </span>
-      </div>
-    </div>
   );
 }
 
